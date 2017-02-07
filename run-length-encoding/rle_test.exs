@@ -36,4 +36,9 @@ defmodule RunLengthEncoderTest do
   test "it decodes a more complicated string" do
     assert RunLengthEncoder.decode("12W1B12W3B24W1B") === "WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWB"
   end
+
+  # @tag :pending
+  test "it decodes an extremely long string" do
+    assert RunLengthEncoder.decode("111W") === "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+  end
 end

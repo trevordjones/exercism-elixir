@@ -1,3 +1,4 @@
+require IEx
 defmodule RunLengthEncoder do
   @doc """
   Generates a string where consecutive elements are represented as a data value and count.
@@ -33,33 +34,27 @@ defmodule RunLengthEncoder do
     encode(String.codepoints(string))
   end
 
-  def find_number(n, n1) do
-    if String.upcase(n1) == String.downcase(n1), do: n <> n1, else: n
-  end
-
-  def decode(1, l) do
-    l
-  end
-
-  def decode(n, l) do
-    l <> decode(n - 1, l)
-  end
-
-  def decode([]) do
+  def decode("") do
     ""
   end
 
-  def decode([n|t]) do
-    number = find_number(n, hd(t))
-    integer = String.to_integer(number)
-    new_list = if number == n <> hd(t), do: List.delete(t, hd(t)), else: t
-    letter = hd(new_list)
-    list_without_first_letter = List.delete(new_list, letter)
-    decode(integer, letter) <> decode(list_without_first_letter)
+  def find_number(string) do
+    first = String.first(string)
+    if String.upcase(first) == String.downcase(first) do
+      new_string = String.replace_prefix(string, first, "")
+      first <> find_number(new_string)
+    else
+      ""
+    end
   end
 
   @spec decode(String.t) :: String.t
   def decode(string) do
-    decode(String.codepoints(string))
+    number = find_number(string)
+    integer = String.to_integer(number)
+    string_without_number = String.replace_prefix(string, number, "")
+    first_letter = String.first(string_without_number)
+    new_string = String.replace_prefix(string_without_number, first_letter, "")
+    String.duplicate(first_letter, integer) <> decode(new_string)
   end
 end
